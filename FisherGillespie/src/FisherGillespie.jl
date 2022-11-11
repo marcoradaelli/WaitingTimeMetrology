@@ -8,7 +8,7 @@ using Polynomials
 using ProgressMeter
 
 function verify_working()
-    println("The packkage has been imported correctly")
+    println("The package has been imported correctly")
     return true
 end
 

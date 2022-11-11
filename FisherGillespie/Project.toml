@@ -1,7 +1,7 @@
 name = "FisherGillespie"
 uuid = "729a31f5-a1d2-4878-91b8-ebdf25b224de"
 authors = ["Marco Radaelli <radaellm@tcd.ie>, Gabriel T. Landi <gtlandi@gmail.com>, Felix C. Binder <felix.binder@tcd.ie>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
