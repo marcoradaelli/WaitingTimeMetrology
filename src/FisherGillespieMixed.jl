@@ -1,4 +1,4 @@
-function gillespie_fisher(
+function gillespie_fisher_mixed(
       H::Matrix{ComplexF64},
       Hp::Matrix{ComplexF64},
       Hm::Matrix{ComplexF64},
@@ -200,7 +200,7 @@ function gillespie_fisher(
 
 end
 
-function state_at_time_on_trajectory(
+function state_at_time_on_trajectory_mixed(
     t_range::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64},
     relevant_times::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64},
     V::Vector{Matrix{ComplexF64}},
