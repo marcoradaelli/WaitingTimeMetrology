@@ -37,7 +37,7 @@ function gillespie_fisher(
     t_final::Float64,
     dt::Float64,
     number_trajectories::Int64,
-    verbose::Bool=True)
+    verbose::Bool=true)
 
     t_range = 0.:dt:t_final
 
