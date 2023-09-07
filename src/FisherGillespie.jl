@@ -7,6 +7,8 @@ using Plots
 using Polynomials
 using ProgressMeter
 
+include("FisherGillespieMixed.jl")
+
 function verify_working()
     println("The package has been imported correctly")
     return true
