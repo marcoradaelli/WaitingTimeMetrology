@@ -204,7 +204,7 @@ function gillespie_fisher_mixed(
                 weight = real(tr(unvectorise(J_dist * vect_ρ)))
                 push!(weights, weight)
             end
-            n_jump = sample(1:length(M_l), Weights(weights))
+            n_jump = sample(1:length(J_l), Weights(weights))
             merge!(dict_jump, Dict("JumpChannel" => n_jump))
             
             # Updates the state after the jump.
