@@ -1,3 +1,23 @@
+function find_nearest(a,x)
+    length(a) > 0 || return 0:-1
+    r = searchsorted(a,x)
+    length(r) > 0 && return r
+    last(r) < 1 && return searchsorted(a,a[first(r)])
+    first(r) > length(a) && return searchsorted(a,a[last(r)])
+    x-a[last(r)] < a[first(r)]-x && return searchsorted(a,a[last(r)])
+    x-a[last(r)] > a[first(r)]-x && return searchsorted(a,a[first(r)])
+    return first(searchsorted(a,a[last(r)])):last(searchsorted(a,a[first(r)]))
+end
+
+function vectorise(x)
+    return vec(x)
+end
+
+function unvectorise(x)
+    d = trunc(Int, sqrt(length(x)))
+    return reshape(x, (d,d))
+end
+
 function gillespie_fisher_mixed(
         H::Matrix{ComplexF64},
         Hp::Matrix{ComplexF64},
