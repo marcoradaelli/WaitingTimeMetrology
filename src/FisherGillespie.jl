@@ -154,10 +154,6 @@ function gillespie_fisher(
             # Renormalize the state.
             ψ = ψ / norm_state
             
-            if verbose
-                println(string(dict_jump))
-            end
-            
             # Compute the ξ matrix.
             ξ = 1/(norm_state^2) * (M_l[n_jump] * V[n_T] * ξ * (V[n_T])' * (M_l[n_jump])')
             ξ += 1/(norm_state^2) * (Δ[n_jump][n_T] * ρ * (V[n_T])' * (M_l[n_jump])')
