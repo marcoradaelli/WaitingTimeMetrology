@@ -248,4 +248,84 @@ function compute_fisher_information(
     return t_range, average_fisher
 end
 
+function evolve_ξ_on_trajectory(θ::Float64, trajectory::Vector{Dict{String, Any}}, func_H_θ::Function, func_M_l_θ::Function, ψ0::Vector{ComplexF64}, t_final::Float64, dt::Float64, dθ::Float64)
+    # println("Trying evolution function with γ=" * string(θ))
+    
+    # Initial state and monitoring operator.
+    ψ = ψ0
+    ξ = complex(zeros((size(ψ0)[1], size(ψ0)[1])))
+    
+    # Computes the overall jump operator for the given θ.
+    J = zero(ξ)
+    M_l = func_M_l_θ(θ)
+    for M in M_l
+        J += M' * M
+    end
+    # And its displaced version.
+    Jp = zero(ξ)
+    Mp_l = func_M_l_θ(θ + dθ)
+    for Mp in Mp_l
+        Jp += Mp' * Mp
+    end
+    
+    # Computes the effective Hamiltonian for the given θ.
+    H = func_H_θ(θ)
+    He = H - 1im/2. * J
+    # And its displaced version.
+    Hp = func_H_θ(θ + dθ)
+    Hep = Hp - 1im/2. * Jp
+    
+    
+    # Derivative of the jump operators for the given θ.
+    Mdot_l = []
+    for n_M in eachindex(M_l)
+        dM = (Mp_l[n_M] - M_l[n_M]) / dθ
+        push!(Mdot_l, dM)
+    end
+    
+    for jump in trajectory[2:end]  # The first jump is artificial, in the output of Gillespie.
+        ψ_before = ψ
+        ρ_before = ψ * ψ'
+        # Computes the no-jump evolution operator for the given time since last jump.
+        V = exp(-1im * He * jump["TimeSinceLast"])
+        # Evolves the state using such operator.
+        ψ = V * ψ
+        # Evolves the state according to the jump channel found in the measurement record.
+        ψ = M_l[jump["JumpChannel"]] * ψ
+        # Normalises the state.
+        norm_state = norm(ψ)
+        ψ = ψ / norm_state
+        
+        # Computes the relevant derivatives for the evolution of the monitoring operator (Δ object).
+        Vdot = (exp(-1im * Hep * jump["TimeSinceLast"]) - exp(-1im * He * jump["TimeSinceLast"])) / dθ
+        Δ = Mdot_l[jump["JumpChannel"]] * V + M_l[jump["JumpChannel"]] * Vdot
+        
+        # Evolves also the monitoring operator.
+        ξ = 1/(norm_state^2) * (M_l[jump["JumpChannel"]] * V * ξ * V' * (M_l[jump["JumpChannel"]])')
+        ξ += 1/(norm_state^2) * (Δ * ρ_before * V' * (M_l[jump["JumpChannel"]])')
+        ξ += 1/(norm_state^2) * (M_l[jump["JumpChannel"]] * V * ρ_before * Δ')
+        
+        # println("Done calculation for jump in channel " * string(jump["JumpChannel"]) * ": monitoring operator is currently ")
+        # println(ξ)
+    end
+    
+    # Finally, evolves up to the final time.
+    ψ_before = ψ
+    ρ_before = ψ * ψ'
+    last_jump_time = last(trajectory)["AbsTime"]
+    time_until_end = t_final - last_jump_time
+    V = exp(-1im * He * time_until_end)
+    Vdot = (exp(-1im * Hep * time_until_end) - exp(-1im * He * time_until_end)) / dθ
+    
+    # Evolves the state and normalise.
+    ψ = V * ψ
+    norm_state = norm(ψ)
+    ψ = ψ / norm_state
+    
+    # Evolves the monitoring operator.
+    ξ = 1/(norm_state^2) * (Vdot * ρ_before * V' + V * ρ_before * Vdot' + V * ξ * V')
+    
+    return ξ
+end
+
 end # module
