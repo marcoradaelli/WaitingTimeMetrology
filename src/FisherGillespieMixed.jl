@@ -32,6 +32,7 @@ function gillespie_fisher_mixed(
         t_final::Float64,
         dt::Float64,
         dθ::Float64,
+        ξ0=nothing,
         number_trajectories::Int64,
         verbose::Bool=false)
     
@@ -160,7 +161,11 @@ function gillespie_fisher_mixed(
         # Initial state.
         ρ = ρ0
         # Initial monitoring operator.
-        ξ = zero(ρ)
+        if ξ0 == nothing
+            ξ = zero(ρ)
+        else
+            ξ = ξ0
+        end
         # Absolute time.
         τ = 0
         
@@ -170,7 +175,7 @@ function gillespie_fisher_mixed(
             "TimeSinceLast" => 0,
             "JumpChannel" => nothing,
             "ρAfter" => ρ0,
-            "ξAfter" => zero(ρ0))
+            "ξAfter" => ξ)
         push!(results, dict_initial)
         
         while τ < t_final
