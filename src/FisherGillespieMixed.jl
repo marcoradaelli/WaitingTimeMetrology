@@ -32,9 +32,9 @@ function gillespie_fisher_mixed(
         t_final::Float64,
         dt::Float64,
         dθ::Float64,
-        ξ0=nothing,
         number_trajectories::Int64,
-        verbose::Bool=false)
+        verbose::Bool=false,
+        ξ0=nothing)
     
     display("Starting Gillespie evolution")
     
