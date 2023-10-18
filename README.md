@@ -180,7 +180,7 @@ A list of values of the Fisher information at all required times, specified in `
 - `ψ0` is a parameter that has to be given, but it is not currently implemented. The initial state is, instead, obtained from the jump at time zero in the `trajectory_data` list.
 
 ## Examples
-We give a range of example Jupyter Notebooks in the `Examples` folders. 
+We give a range of example Jupyter Notebooks in the `Examples` folders. **Note.** Some of the examples may require the installation of further external libraries. Not being part of the package sources (and manifest files), these libraries are not automatically installed with `FisherGillespie`.
 - `ThreeLevelMaser.ipynb` uses the three levels maser system to showcase the use of the mixed states formalism, also considering partial monitoring and channels merging.
 - `Micromaser.ipynb` uses the single-atom maser to showcase the use of the pure states formalism, exploring how the value of $\theta$ (state of the incoming atoms beam) affects the Fisher information rate.
 -  `CoupledQubits.ipynb` uses the coupled qubit model to showcase how an initial monitoring operator different from the zero operator can affect the evolution. The considered initial monitoring operator corresponds to the analytically computed steady state of the system.
