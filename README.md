@@ -1,6 +1,11 @@
 # Parameter estimation under quantum jump unravelling
 This code accompanies the manuscript [TO APPEAR]. If you are not interested in the metrological aspect, but only in the simulation of the quantum jump process with Gillespie, you might want to check out our Gillespie library [here](https://github.com/marcoradaelli/GillespieQuantumJumps), and the associated preprint [here](https://arxiv.org/abs/2303.15405).
 
+## Documentation index
+- [Installation instructions](#installation)
+- [Pure states evolution](#pure-states-evolution)
+
+
 ## Installation
 At the moment, the package is not (yet) a registered Julia package. To install it, in the Package REPL give the command
 
