@@ -169,4 +169,8 @@ A list of values of the Fisher information at all required times, specified in `
 - `ψ0` is a parameter that has to be given, but it is not currently implement.
 
 ## Examples
-We give a range of examples in the `Examples` folders. 
+We give a range of example Jupyter Notebooks in the `Examples` folders. 
+- `ThreeLevelMaser.ipynb` uses the three levels maser system to showcase the use of the mixed states formalism, also considering partial monitoring and channels merging.
+- `Micromaser.ipynb` uses the single-atom maser to showcase the use of the pure states formalism, exploring how the value of $\theta$ (state of the incoming atoms beam) affects the Fisher information rate.
+-  `CoupledQubits.ipynb` uses the coupled qubit model to showcase how an initial monitoring operator different from the zero operator can affect the evolution. The considered initial monitoring operator corresponds to the analytically computed steady state of the system.
+- `MaximumLikelihoodTwoQubits.ipynb` consideres again the coupled qubit model, generating a single trajectory and then using the provided function for an MLE estimation of $\theta$.
