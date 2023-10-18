@@ -176,7 +176,8 @@ A list of values of the Fisher information at all required times, specified in `
 - `relevant_times` is a parameter that has to be given, but it is not currently implemented.
 - `V` is the list of no-jump evolution operators at all times specified in `t_range`.
 - `Vdot` is the list of the derivatives of the no-jump evolution operators with respect to $\theta$, for all times specified in `t_range`.
-- `ψ0` is a parameter that has to be given, but it is not currently implement.
+- `trajectory_data` is a list of dictionaries, of the same format as the output of the `gillespie_fisher_mixed` function.
+- `ψ0` is a parameter that has to be given, but it is not currently implemented. The initial state is, instead, obtained from the jump at time zero in the `trajectory_data` list.
 
 ## Examples
 We give a range of example Jupyter Notebooks in the `Examples` folders. 
