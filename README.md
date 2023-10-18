@@ -1,9 +1,14 @@
 # Parameter estimation under quantum jump unravelling
-This code accompanies the manuscript [TO APPEAR]. If you are not interested in the metrological aspect, but only in the simulation of the quantum jump process with Gillespie, you might want to check out our Gillespie library [here](https://github.com/marcoradaelli/GillespieQuantumJumps), and the associated preprint [here](https://arxiv.org/abs/2303.15405).
+**Authors:** Marco Radaelli, Joey A. Smiga, Gabriel T. Landi, Felix C. Binder
+
+This code accompanies the manuscript [TO APPEAR]. If you are not interested in the metrological aspect, but only in the simulation of the quantum jump process with the Gillespie algorithm, you might want to check out our Gillespie library [here](https://github.com/marcoradaelli/GillespieQuantumJumps), and the associated preprint [here](https://arxiv.org/abs/2303.15405).
 
 ## Documentation index
 - [Installation instructions](#installation)
 - [Pure states evolution](#pure-states-evolution)
+- [Mixed states evolution, partial monitoring, merging channels and $\theta$-dependent initial monitoring operator](#mixed-states-partial-monitoring-merging-channels)
+- [Examples](#examples)
+
 
 
 ## Installation
