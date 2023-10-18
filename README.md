@@ -36,7 +36,7 @@ The function `gillespie_fisher` allows to evolve the monitoring operator, along 
 
 #### Returns 
 The function returns a tuple of four elements. 
-- `trajectories_results`, is a list of lists of dictionaries. Each of the elements of the outer list corresponds to a trajectory, and each trajectory contains a list of dictionaries; each dictionary corresponds to a quantum jump. For simplicity of implementation, a first jump in channel `nothing` is always added at time zero.
+- `trajectories_results` is a list of lists of dictionaries. Each of the elements of the outer list corresponds to a trajectory, and each trajectory contains a list of dictionaries; each dictionary corresponds to a quantum jump. For simplicity of implementation, a first jump in channel `nothing` is always added at time zero.
 -  `V` is the list of the no-jump evolution operators, pre-computed at `dt` intervals from zero to `t_final`. 
 - `V_dot` is the list of derivatives of such `V` operators with respect to the parameter $\theta$. 
 - `t_range` is the Julia range `0:dt:t_final`.
@@ -106,3 +106,67 @@ The monitoring operator `ξ` at the final time `t_final`, computed for the param
 If the initial state is not pure, the jump operators are not rank-one projectors or partial monitoring is considered, then the complete formalism of superoperators has to be deployed.
 
 ### Evolving the monitoring operator
+    function gillespie_fisher_mixed(
+        H::Matrix{ComplexF64},
+        Hp::Matrix{ComplexF64},
+        Hm::Matrix{ComplexF64},
+        M_l_l::Vector{Vector{Matrix{ComplexF64}}},
+        Mp_l_l::Vector{Vector{Matrix{ComplexF64}}},
+        Mm_l_l::Vector{Vector{Matrix{ComplexF64}}},
+        S_l::Vector{Matrix{ComplexF64}},
+        Sp_l::Vector{Matrix{ComplexF64}},
+        Sm_l::Vector{Matrix{ComplexF64}},
+        ρ0::Matrix{ComplexF64},
+        t_final::Float64,
+        dt::Float64,
+        dθ::Float64,
+        number_trajectories::Int64,
+        verbose::Bool=false,
+        ξ0=nothing)
+
+#### Returns
+The function returns a tuple of four elements. 
+- `trajectories_results` is a list of lists of dictionaries. Each of the elements of the outer list corresponds to a trajectory, and each trajectory contains a list of dictionaries; each dictionary corresponds to a quantum jump. For simplicity of implementation, a first jump in channel `nothing` is always added at time zero.
+-  `V` is the list of the no-jump evolution operators, pre-computed at `dt` intervals from zero to `t_final`. 
+- `V_dot` is the list of derivatives of such `V` operators with respect to the parameter $\theta$. 
+- `t_range` is the Julia range `0:dt:t_final`.
+
+#### Arguments
+- `H` is the Hamiltonian of the system, computed for the true value of $\theta$.
+- `Hp` is the Hamiltonian, computed for the shifted value $\theta + d\theta$.
+- `Hm` is the Hamiltonian, computed for the shifted value $\theta - d\theta$.
+- `M_l_l` is a list of lists of jump operators, computed for the true value of $\theta$. Jump operators given in the same sublist are assumed to be merged in post-processing. I.e., the list `[[A],[B,C],[D,E],[F]]` means that there are six jump operators; the outputs of `A` and `F` can be individually resolved, while `B` and `C` are merged, and same for `D` and `E`. 
+- `Mp_l_l` is a list of lists of jump operators, computed for the shifted value $\theta + d\theta$. It is assumed to have the same structure as `M_l_l`.
+- `Mm_l_l` is a list of lists of jump operators, computed for the shifted value $\theta - d\theta$. It is assumed to have the same structure as `M_l_l`.
+- `S_l` is a list of unmonitored jump operators, allowing for partial monitoring, computed for the true value of $\theta$. Unmonitored jump operators should be listed only in `S_l`, not in `M_l_l`.
+- `Sp_l` is a list of unmonitored jump operators, computed for the shifted value $\theta + d\theta$.
+- `Sm_l` is a list of unmonitored jump operators, computed for the shifted value $\theta - d\theta$.
+- `ρ0` is the initial state, given as a density matrix.
+- `t_final` is the final time of the evolution.
+- `dt` is the timestep of the evolution.
+- `dθ` is the increment in the parameter value for the calculation of the derivatives.
+- `number_trajectories` is the number of considered trajectories.
+- `verbose` is an optional parameter, defaulting at `false`. When `verbose` is set to `true`, some more output may be shown during the evolution. **Warning!** When a large number of trajectories or a long evolution time is employed, setting `verbose` to true may potentially crash the program.
+- `ξ0` is an optional parameter, defaulting at `nothing`. When given, it specifies a value for the initial monitoring operator, which is assumed to be traceless and symmetric.
+
+### Obtaining the Fisher information
+    function fisher_at_time_on_trajectory_mixed(
+        t_range::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64},
+        relevant_times::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64},
+        V::Vector{Matrix{ComplexF64}},
+        Vdot::Vector{Matrix{ComplexF64}},
+        trajectory_data::Vector{Dict{String, Any}},
+        ψ0::Matrix{ComplexF64})
+
+#### Returns
+A list of values of the Fisher information at all required times, specified in `t_range`.
+
+#### Arguments
+- `t_range` is the list of times for which `V` and `Vdot` are given, and also for which the calculation of the Fisher information is executed.
+- `relevant_times` is a parameter that has to be given, but it is not currently implemented.
+- `V` is the list of no-jump evolution operators at all times specified in `t_range`.
+- `Vdot` is the list of the derivatives of the no-jump evolution operators with respect to $\theta$, for all times specified in `t_range`.
+- `ψ0` is a parameter that has to be given, but it is not currently implement.
+
+## Examples
+We give a range of examples in the `Examples` folders. 
