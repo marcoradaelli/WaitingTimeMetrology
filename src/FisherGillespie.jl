@@ -223,6 +223,58 @@ function fisher_at_time_on_trajectory(
     return v_fisher
 end
 
+function monitoring_at_time_on_trajectory(
+    t_range::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64},
+    relevant_times::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64},
+    V::Vector{Matrix{ComplexF64}},
+    Vdot::Vector{Matrix{ComplexF64}},
+    trajectory_data::Vector{Dict{String, Any}},
+    ψ0::Vector{ComplexF64})
+
+    v_monitoring = Matrix{ComplexF64}[]
+
+    # Creates an array of jump times.
+    jump_times = [trajectory_data[i]["AbsTime"] for i in eachindex(trajectory_data)]
+    # Creates an array of states after the jumps.
+    ψ_after_jumps = [trajectory_data[i]["ψAfter"] for i in eachindex(trajectory_data)]
+    # Creates an array of ξ after the jumps.
+    ξ_after_jumps = [trajectory_data[i]["ξAfter"] for i in eachindex(trajectory_data)]
+
+    # Cycles over the jumps times.
+    for n_jump in 1:length(jump_times)-1
+        next_jump_time = jump_times[n_jump + 1]
+        # Determines the set of relevant times between this jump and the following one.
+        relevant_times_in_interval = [t for t in t_range if jump_times[n_jump] <= t < next_jump_time]
+        # Cycles over the relevant times.
+        for t_abs in relevant_times_in_interval
+            ψ = ψ_after_jumps[n_jump]
+            ρ = ψ * ψ'
+            ξ = ξ_after_jumps[n_jump]
+            n_t = find_nearest(t_range, t_abs - jump_times[n_jump])[1]
+            trace = real(tr(V[n_t] * ρ * (V[n_t])'))
+            ξ = Vdot[n_t] * ρ * (V[n_t])' + V[n_t] * ρ * (Vdot[n_t])' + V[n_t] * ξ * (V[n_t])'
+            ξ = ξ / trace
+            push!(v_monitoring, ξ)
+        end
+    end
+
+    # Now computes the ξ for all times after the latest jump.
+    last_jump_absolute_time = last(jump_times)
+    relevant_times_after_last_jump = [t for t in t_range if t >= last_jump_absolute_time]
+    for t_abs in relevant_times_after_last_jump
+        ψ = last(ψ_after_jumps)
+        ρ = ψ * ψ'
+        ξ = last(ξ_after_jumps)
+        n_t = find_nearest(t_range, t_abs - last_jump_absolute_time)[1]
+        trace = real(tr(V[n_t] * ρ * (V[n_t])'))
+        ξ = Vdot[n_t] * ρ * (V[n_t])' + V[n_t] * ρ * (Vdot[n_t])' + V[n_t] * ξ * (V[n_t])'
+        ξ = ξ / trace
+        push!(v_monitoring, ξ)
+    end
+
+    return v_monitoring
+end
+
 function compute_fisher_information(
     H::Matrix{ComplexF64},
     Hp::Matrix{ComplexF64},
