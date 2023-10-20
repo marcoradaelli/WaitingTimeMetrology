@@ -87,6 +87,28 @@ The function returns a vector of floats, containing the (stochastic) Fisher info
 - `trajectory_data` is a list of dictionaries of the same form as the output of the `gillespie_fisher` function.
 - `ψ0` is the initial state, given as a state vector (ket).
 
+### Obtaining the monitoring operator
+In some cases, specifically multi-parameter estimation, it may be of interest to obtain the entire monitoring operator at all times on the trajectory, rather than the Fisher information. 
+
+    function monitoring_at_time_on_trajectory(
+        t_range::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64},
+        relevant_times::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64},
+        V::Vector{Matrix{ComplexF64}},
+        Vdot::Vector{Matrix{ComplexF64}},
+        trajectory_data::Vector{Dict{String, Any}},
+        ψ0::Vector{ComplexF64})
+
+#### Returns
+The function returns a vector of matrices, containing the monitoring operator at all times specified in the `relevant_times` argument, on a specific trajectory.
+
+#### Arguments
+- `t_range` is the range of the times for which the `V` and `Vdot` arguments are given. It can coincide with `relevant_times`, and it does in most cases, but it is not compulsory.
+- `relevant_times` is the range of times at which the calculation of the Fisher information is requested. 
+- `V` is the list of no-jump evolution operators at all times specified in `t_range`.
+- `Vdot` is the list of the derivatives of the no-jump evolution operators with respect to $\theta$ at all times specified in `t_range`.
+- `trajectory_data` is a list of dictionaries of the same form as the output of the `gillespie_fisher` function.
+- `ψ0` is the initial state, given as a state vector (ket).
+
 ### Calculating the monitoring operator for different parameter values
 When dealing with MLE estimation, it is important to be able to evolve the monitoring operator along the trajectory for different values of $\theta$, in order to then be able to minimise over $\text{Tr}[\xi_t]^2$. In this case, the trajectory is fixed and given as an input.
 
