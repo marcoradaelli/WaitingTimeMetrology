@@ -1,7 +1,7 @@
 # Parameter estimation under quantum jump unravelling
 **Authors:** Marco Radaelli, Joey A. Smiga, Gabriel T. Landi, Felix C. Binder
 
-This code accompanies the manuscript [TO APPEAR]. If you are not interested in the metrological aspect, but only in the simulation of the quantum jump process with the Gillespie algorithm, you might want to check out our Gillespie library [here](https://github.com/marcoradaelli/GillespieQuantumJumps), and the associated preprint [here](https://arxiv.org/abs/2303.15405).
+This code accompanies the manuscript [arXiv:2402.06556](https://arxiv.org/abs/2402.06556). If you are not interested in the metrological aspect, but only in the simulation of the quantum jump process with the Gillespie algorithm, you might want to check out our Gillespie library [here](https://github.com/marcoradaelli/GillespieQuantumJumps), and the associated preprint [here](https://arxiv.org/abs/2303.15405).
 
 ## Documentation index
 - [Installation instructions](#installation)
