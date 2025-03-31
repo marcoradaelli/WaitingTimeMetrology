@@ -1,4 +1,4 @@
-function find_nearest(a,x)
+function find_nearest_mixed(a,x)
     length(a) > 0 || return 0:-1
     r = searchsorted(a,x)
     length(r) > 0 && return r
@@ -273,7 +273,7 @@ function fisher_at_time_on_trajectory_mixed(
             vect_ρ = vectorise(ρ)
             vect_ξ = vectorise(ξ)
             ξ = ξ_after_jumps[n_jump]
-            n_t = find_nearest(t_range, t_abs - jump_times[n_jump])[1]
+            n_t = find_nearest_mixed(t_range, t_abs - jump_times[n_jump])[1]
             trace = real(tr(unvectorise(V[n_t] * vect_ρ)))
             vect_ξ = (Vdot[n_t] * vect_ρ + V[n_t] * vect_ξ) / trace
             ξ = unvectorise(vect_ξ)
@@ -290,7 +290,7 @@ function fisher_at_time_on_trajectory_mixed(
         ξ = last(ξ_after_jumps)
         vect_ρ = vectorise(ρ)
         vect_ξ = vectorise(ξ)
-        n_t = find_nearest(t_range, t_abs - last_jump_absolute_time)[1]
+        n_t = find_nearest_mixed(t_range, t_abs - last_jump_absolute_time)[1]
         trace = real(tr(unvectorise(V[n_t] * vect_ρ)))
         vect_ξ = (Vdot[n_t] * vect_ρ + V[n_t] * vect_ξ) / trace
         ξ = unvectorise(vect_ξ)
