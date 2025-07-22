@@ -3,7 +3,6 @@ module FisherGillespie
 using LinearAlgebra
 using Random
 using StatsBase
-using Plots
 using Polynomials
 using ProgressMeter
 
